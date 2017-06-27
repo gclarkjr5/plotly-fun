@@ -10,20 +10,19 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+    <script src="./byDN.js"></script>
     <!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.min.js"></script>-->
 </head>
 
 <body>
     <ul id="myTabs" class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#myDiv">By DN</a></li>
-        <li role="presentation"><a href="#profile">Profile</a></li>
-        <li role="presentation"><a href="#messages">Messages</a></li>
+        <li role="presentation" class="active"><a href="#byDN">By DN</a></li>
+        <li role="presentation"><a href="#byMonth">By Month</a></li>
     </ul>
     <div class="tab-content">
-        <div id="myDiv" role="tabpanel" class="tab-pane fade in active container-fluid"></div>
-        <div role="tabpanel" class="tab-pane fade" id="profile">...</div>
-        <div role="tabpanel" class="tab-pane fade" id="messages">...</div>
+        <div id="byDN" role="tabpanel" class="tab-pane fade in active container-fluid"></div>
+        <div id="byMonth" role="tabpanel" class="tab-pane fade in active container-fluid"></div>
     </div>
 
 </body>
@@ -40,72 +39,10 @@
     $.ajax({
         url: `/data`,
         success: function (results) {
-            plotly(results)
+            byDN(results)
+            // byMonth(results)
         }
     });
-
-    // Transform the data to the proper format for Plotly
-    function plotly(data) {
-        let byJustification = _.groupBy(data, `ClosedReason`);
-        let xJust = _.map(byJustification, (x, name) => {
-            let xAxis = _.map(_.uniq(_.map(x, y => {
-                return y.DN
-            })), z => {
-                return { x: z }
-            });
-
-            let grpbyDN = _.groupBy(x, `DN`)
-            let yAxis = _.map(grpbyDN, y => {
-                return { y: y.length }
-            });
-            let mergedData = _.merge(xAxis, yAxis);
-            let fullData = {
-                x: _.map(mergedData, y => {
-                    return y.y
-                }),
-                y: _.map(mergedData, y => {
-                    return y.x
-                }),
-                name: name,
-                type: `bar`,
-                orientation: `h`
-            }
-            return fullData
-        });
-
-        let gDN = _.groupBy(data, `DN`);
-        let order = _.map(gDN, (x, i) => {
-            return {
-                DN: i,
-                num: x.length
-            }
-        })
-        let sorted = _.map(_.orderBy(order, [`num`], [`asc`]), x => {
-            return x.DN
-        })
-
-        let layout = {
-            barmode: `stack`,
-            title: `Alerts by DN`,
-            xaxis: {
-                title: `Count`
-            },
-            yaxis: {
-                categoryorder: `array`,
-                categoryarray: sorted
-            },
-            width: $(window).width() - 100,
-            height: $(window).height() - ($(`#myTabs`).height() + 5),
-            margin: {
-                l: 310,
-                // r: 200
-            }
-        }
-        console.log()
-        // Plot the data
-        Plotly.newPlot('myDiv', xJust, layout);
-    }
-
 </script>
 
 </html>
