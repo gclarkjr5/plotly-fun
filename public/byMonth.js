@@ -1,15 +1,15 @@
 // Transform the data to the proper format for Plotly
 function byMonth(data) {
     let byJustification = _.groupBy(data, `ClosedReason`);
-    let xJust = _.map(byJustification, (x, name) => {
+    let xMonth = _.map(byJustification, (x, name) => {
         let xAxis = _.map(_.uniq(_.map(x, y => {
-            return y.DN
+            return y.Month
         })), z => {
             return { x: z }
         });
 
-        let grpbyDN = _.groupBy(x, `DN`)
-        let yAxis = _.map(grpbyDN, y => {
+        let grpbyMonth = _.groupBy(x, `Month`)
+        let yAxis = _.map(grpbyMonth, y => {
             return { y: y.length }
         });
         let mergedData = _.merge(xAxis, yAxis);

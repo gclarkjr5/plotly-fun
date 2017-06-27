@@ -1,6 +1,18 @@
 // Transform the data to the proper format for Plotly
 function byDN(data) {
     // let colors = ["#a7a9ac", "#00AFD5", "#cddc38", "#246987", "blue"]
+    let months = _.map(data, x => {
+        return moment(x.ClosedDate).format(`YYYY-MM-DD`)
+    });
+    let month = _.map(months, x => {
+        return moment(x, `YYYY-MM-DD`)
+    });
+    // console.log(months)
+    let maxMin = {
+        min: moment.min(month),
+        max: moment.max(month)
+    }
+
     let byJustification = _.groupBy(data, `ClosedReason`);
     let xJust = _.map(byJustification, (x, name) => {
         let xAxis = _.map(_.uniq(_.map(x, y => {
@@ -41,7 +53,7 @@ function byDN(data) {
 
     let layout = {
         barmode: `stack`,
-        title: `Alerts by DN`,
+        title: `${maxMin.min._i} to ${maxMin.max._i}`,
         xaxis: {
             title: `Count`
         },
@@ -56,7 +68,7 @@ function byDN(data) {
             // r: 200
         }
     }
-    console.log()
+    // console.log()
     // Plot the data
     Plotly.newPlot('byDN', xJust, layout);
 }
