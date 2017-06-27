@@ -1,0 +1,20 @@
+{
+  "name": "plotterly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gary Clark",
+  "license": "ISC",
+  "dependencies": {
+    "chokidar": "^1.7.0",
+    "csvtojson": "^1.1.6",
+    "express": "^4.15.3",
+    "fast-csv": "^2.4.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "plotly": "^1.0.6"
+  }
+}

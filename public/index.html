@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+    <!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.min.js"></script>-->
+</head>
+
+<body>
+    <div id="myDiv", class="container-fluid">
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.94/Bacon.min.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url: `/data`,
+        success: function (results) {
+            plotly(results)
+        }
+    });
+    function plotly(data) {
+        let xaxis = _.map(_.uniq(_.map(data, function(x) {
+            return x.DN
+        })), function(y) {
+            return {x: y}
+        })
+        let grpbyDN = _.groupBy(data, `DN`)
+        let yaxis = _.map(grpbyDN, function(x) {
+            return {y: x.length}
+        })
+        let mergedData = _.merge(_.uniq(xaxis), yaxis);
+        let sortedData = _.orderBy(mergedData, [`y`], [`asc`])
+        console.log(sortedData)
+        let dataPlot = [
+            {
+                x: _.map(sortedData, function(x) {
+                    return x.y
+                }),
+                y: _.map(sortedData, function(x) {
+                    return x.x
+                }),
+                type: 'bar',
+                orientation: `h`
+            }
+        ];
+
+        Plotly.newPlot('myDiv', dataPlot);
+    }
+</script>
+
+</html>
