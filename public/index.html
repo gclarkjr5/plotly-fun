@@ -15,17 +15,36 @@
 </head>
 
 <body>
-    <div id="myDiv" , class="container-fluid">
+    <ul id="myTabs" class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#myDiv">By DN</a></li>
+        <li role="presentation"><a href="#profile">Profile</a></li>
+        <li role="presentation"><a href="#messages">Messages</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="myDiv" role="tabpanel" class="tab-pane fade in active container-fluid"></div>
+        <div role="tabpanel" class="tab-pane fade" id="profile">...</div>
+        <div role="tabpanel" class="tab-pane fade" id="messages">...</div>
     </div>
+
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.94/Bacon.min.js"></script>
 <script type="text/javascript">
+
+    // Activate the functionality of the tabs
+    $('#myTabs a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    });
+
+    // Get the data
     $.ajax({
         url: `/data`,
         success: function (results) {
             plotly(results)
         }
     });
+
+    // Transform the data to the proper format for Plotly
     function plotly(data) {
         let byJustification = _.groupBy(data, `ClosedReason`);
         let xJust = _.map(byJustification, (x, name) => {
@@ -40,7 +59,6 @@
                 return { y: y.length }
             });
             let mergedData = _.merge(xAxis, yAxis);
-            // let sortedData = _.orderBy(mergedData, [`y`], [`asc`]);
             let fullData = {
                 x: _.map(mergedData, y => {
                     return y.y
@@ -77,41 +95,14 @@
                 categoryarray: sorted
             },
             width: $(window).width() - 100,
-            height: $(window).height(),
+            height: $(window).height() - ($(`#myTabs`).height() + 5),
             margin: {
-                l: 310
+                l: 310,
                 // r: 200
             }
         }
-
-
-
-        // Plot without splitting each bar by justification reasons
-        // let xaxis = _.map(_.uniq(_.map(data, function(x) {
-        //     return x.DN
-        // })), function(y) {
-        //     return {x: y}
-        // })
-        // let grpbyDN = _.groupBy(data, `DN`)
-        // let yaxis = _.map(grpbyDN, function(x) {
-        //     return {y: x.length}
-        // })
-        // let mergedData = _.merge(_.uniq(xaxis), yaxis);
-        // let sortedData = _.orderBy(mergedData, [`y`], [`asc`])
-        // console.log(sortedData)
-        // let dataPlot = [
-        //     {
-        //         x: _.map(sortedData, function(x) {
-        //             return x.y
-        //         }),
-        //         y: _.map(sortedData, function(x) {
-        //             return x.x
-        //         }),
-        //         type: 'bar',
-        //         orientation: `h`
-        //     }
-        // ];
-
+        console.log()
+        // Plot the data
         Plotly.newPlot('myDiv', xJust, layout);
     }
 
