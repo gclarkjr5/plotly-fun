@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div id="myDiv", class="container-fluid">
+    <div id="myDiv" , class="container-fluid">
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.94/Bacon.min.js"></script>
@@ -27,33 +27,74 @@
         }
     });
     function plotly(data) {
-        let xaxis = _.map(_.uniq(_.map(data, function(x) {
-            return x.DN
-        })), function(y) {
-            return {x: y}
-        })
-        let grpbyDN = _.groupBy(data, `DN`)
-        let yaxis = _.map(grpbyDN, function(x) {
-            return {y: x.length}
-        })
-        let mergedData = _.merge(_.uniq(xaxis), yaxis);
-        let sortedData = _.orderBy(mergedData, [`y`], [`asc`])
-        console.log(sortedData)
-        let dataPlot = [
-            {
-                x: _.map(sortedData, function(x) {
-                    return x.y
+        let byJustification = _.groupBy(data, `ClosedReason`);
+        let xJust = _.map(byJustification, (x, name) => {
+            let xAxis = _.map(_.uniq(_.map(x, y => {
+                return y.DN
+            })), z => {
+                return { x: z }
+            });
+
+            let grpbyDN = _.groupBy(x, `DN`)
+            let yAxis = _.map(grpbyDN, y => {
+                return { y: y.length }
+            });
+            let mergedData = _.merge(xAxis, yAxis);
+            // let sortedData = _.orderBy(mergedData, [`y`], [`asc`]);
+            let fullData = {
+                x: _.map(mergedData, y => {
+                    return y.y
                 }),
-                y: _.map(sortedData, function(x) {
-                    return x.x
+                y: _.map(mergedData, y => {
+                    return y.x
                 }),
-                type: 'bar',
+                name: name,
+                type: `bar`,
                 orientation: `h`
             }
-        ];
+            return fullData
+        });
 
-        Plotly.newPlot('myDiv', dataPlot);
+        let layout = {
+            barmode: `stack`
+            // title: `Alerts by DN`,
+            // xaxis: {
+            //     title: `Count`
+            // }
+        }
+
+        let gDN = _.groupBy(data, `DN`)
+        console.log(xJust)
+
+        // Plot without splitting each bar by justification reasons
+        // let xaxis = _.map(_.uniq(_.map(data, function(x) {
+        //     return x.DN
+        // })), function(y) {
+        //     return {x: y}
+        // })
+        // let grpbyDN = _.groupBy(data, `DN`)
+        // let yaxis = _.map(grpbyDN, function(x) {
+        //     return {y: x.length}
+        // })
+        // let mergedData = _.merge(_.uniq(xaxis), yaxis);
+        // let sortedData = _.orderBy(mergedData, [`y`], [`asc`])
+        // console.log(sortedData)
+        // let dataPlot = [
+        //     {
+        //         x: _.map(sortedData, function(x) {
+        //             return x.y
+        //         }),
+        //         y: _.map(sortedData, function(x) {
+        //             return x.x
+        //         }),
+        //         type: 'bar',
+        //         orientation: `h`
+        //     }
+        // ];
+
+        Plotly.newPlot('myDiv', xJust, layout);
     }
+
 </script>
 
 </html>
