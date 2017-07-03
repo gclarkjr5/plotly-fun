@@ -20,24 +20,25 @@ module.exports = callback => {
         // let allData = [];
         watcher
             .on('add', path => {
-                console.log(path)
+                // console.log(path)
                 readStreamAndPushJSONtoObject(path)
                 // console.log(`${fLocation}\\${file}`, allData)
             })
-            // .on(`unlink`, path => {
-            //     // console.log(path)
-            //     let file = []
-            //     fs.readdir(fLocation, (err, items) => {
-            //         for (var i = 0; i < items.length; i++) {
-            //             console.log(`${fLocation}\\${items[i]}`);
-            //             // file.push(`${fLocation}\\${items[i]}`);
-            //             readStreamAndPushJSONtoObject(`${fLocation}\\${items[i]}`)
-            //         }
-            //         // console.log(file)
-            //     });
-                
-            //     // readStreamAndPushJSONtoObject(path)
-            // })
+            .on('error', error => log(`Watcher error: ${error}`))
+        // .on(`unlink`, path => {
+        //     // console.log(path)
+        //     let file = []
+        //     fs.readdir(fLocation, (err, items) => {
+        //         for (var i = 0; i < items.length; i++) {
+        //             console.log(`${fLocation}\\${items[i]}`);
+        //             // file.push(`${fLocation}\\${items[i]}`);
+        //             readStreamAndPushJSONtoObject(`${fLocation}\\${items[i]}`)
+        //         }
+        //         // console.log(file)
+        //     });
+
+        //     // readStreamAndPushJSONtoObject(path)
+        // })
     }
 
     // Read in the csv files, transform it and return it
