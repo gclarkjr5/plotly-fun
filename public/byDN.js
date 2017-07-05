@@ -1,5 +1,6 @@
 // Transform the data to the proper format for Plotly
 function byDN(data) {
+    console.log(data)
     // let colors = ["#a7a9ac", "#00AFD5", "#cddc38", "#246987", "blue"]
     let months = _.map(data, x => {
         return moment(x.ClosedDate).format(`YYYY-MM-DD`)

@@ -1,5 +1,5 @@
 // Transform the data to the proper format for Plotly
-function byMonth(data) {
+function byMonth_Line(data) {
     let byJustification = _.groupBy(data, `ClosedReason`);
     let xMonth = _.map(byJustification, (x, name) => {
         let xAxis = _.map(_.uniq(_.map(x, y => {
@@ -21,8 +21,8 @@ function byMonth(data) {
             y: _.map(mergedData, y => {
                 return y.y
             }),
-            name: name,
-            type: `bar`
+            name: name
+            // type: `bar`
         }
         return fullData
     });
@@ -40,8 +40,8 @@ function byMonth(data) {
     // })
 
     let layout = {
-        barmode: `stack`,
-        title: `Alerts by Month`,
+        // barmode: `stack`,
+        title: `Trend of Alert Justifications by Month`,
         xaxis: {
             title: `Count`
         },
@@ -58,5 +58,5 @@ function byMonth(data) {
     }
     // console.log()
     // // Plot the data
-    Plotly.newPlot('byMonth', xMonth, layout);
+    Plotly.newPlot('byMonth_Line', xMonth, layout);
 }

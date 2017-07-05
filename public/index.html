@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
     <script src="./byDN.js"></script>
     <script src="./byMonth.js"></script>
+    <script src="./byMonth_Line.js"></script>
     <script src="/scripts/moment/min/moment.min.js"></script>
     <!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.min.js"></script>-->
@@ -28,6 +29,7 @@
         </div>
         <div id="Month" role="tabpanel" class="tab-pane fade in container-fluid">
             <div id="byMonth"></div>
+            <div id="byMonth_Line"></div>
         </div>
     </div>
 </body>
@@ -48,6 +50,7 @@
                 // console.log(results)
                 byDN(results)
                 byMonth(results)
+                byMonth_Line(results)
             }
         });
     })
