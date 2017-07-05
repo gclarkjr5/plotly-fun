@@ -19,33 +19,39 @@
 
 <body>
     <ul id="myTabs" class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#byDN">By DN</a></li>
-        <li role="presentation"><a href="#byMonth">By Month</a></li>
+        <li role="presentation" class="active"><a href="#DN">By DN</a></li>
+        <li role="presentation"><a href="#Month">By Month</a></li>
     </ul>
     <div class="tab-content">
-        <div id="byDN" role="tabpanel" class="tab-pane fade in active container-fluid"></div>
-        <div id="byMonth" role="tabpanel" class="tab-pane fade in active container-fluid"></div>
+        <div id="DN" role="tabpanel" class="tab-pane fade in active container-fluid">
+            <div id="byDN"></div>
+        </div>
+        <div id="Month" role="tabpanel" class="tab-pane fade in container-fluid">
+            <div id="byMonth"></div>
+        </div>
     </div>
-
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.94/Bacon.min.js"></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+        window.location = `http://localhost:8080/#DN`
+        // Activate the functionality of the tabs
+        $('#myTabs a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
 
-    // Activate the functionality of the tabs
-    $('#myTabs a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-    });
+        // Get the data
+        $.ajax({
+            url: `/data`,
+            success: function (results) {
+                // console.log(results)
+                byDN(results)
+                byMonth(results)
+            }
+        });
+    })
 
-    // Get the data
-    $.ajax({
-        url: `/data`,
-        success: function (results) {
-            // console.log(results)
-            byDN(results)
-            byMonth(results)
-        }
-    });
 </script>
 
 </html>
