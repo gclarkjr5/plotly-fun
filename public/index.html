@@ -6,10 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.7.0/chosen.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.7.0/chosen.jquery.min.js"></script>
     <script src="./byDN.js"></script>
     <script src="./byMonth.js"></script>
     <script src="./byMonth_Line.js"></script>
@@ -25,6 +28,7 @@
     </ul>
     <div class="tab-content">
         <div id="DN" role="tabpanel" class="tab-pane fade in active container-fluid">
+            <select data-placeholder="Select a Month" class="chosen-select"></select>
             <div id="byDN"></div>
         </div>
         <div id="Month" role="tabpanel" class="tab-pane fade in container-fluid">
@@ -33,7 +37,7 @@
         </div>
     </div>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.94/Bacon.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bacon.js/0.7.94/Bacon.min.js"></script>-->
 <script type="text/javascript">
     $(document).ready(function () {
         window.location = `http://localhost:8080/#DN`
@@ -47,11 +51,28 @@
         $.ajax({
             url: `/data`,
             success: function (results) {
-                // console.log(results)
+
+                let m = _.uniq(_.map(results, x => {
+                    return x.Month
+                }))
+                _.forEach(m, x => {
+                    $(`.chosen-select`).append(`<option value=${x.replace(/ +/g, "")}>${x}</option>`)
+                })
+                $(`.chosen-select`).append(`<option value=all>All</option>`)
+                $(`.chosen-select`).trigger(`chosen:updated`)
+
+                $('.chosen-select').on('change', (evt, params) => {
+                    console.log(params.selected)
+                });
+
                 byDN(results)
                 byMonth(results)
                 byMonth_Line(results)
             }
+        });
+
+        $(".chosen-select").chosen({
+            width: "20%"
         });
     })
 
