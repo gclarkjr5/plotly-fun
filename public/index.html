@@ -51,21 +51,32 @@
         $.ajax({
             url: `/data`,
             success: function (results) {
+                let m = _.map(results, x => {
+                    return moment(x.MonthFormat)
+                })
+                let months = _.uniq(_.map(m, x => {
+                    return x._i
+                }));
 
-                let m = _.uniq(_.map(results, x => {
-                    return x.Month
-                }))
-                _.forEach(m, x => {
-                    $(`.chosen-select`).append(`<option value=${x.replace(/ +/g, "")}>${x}</option>`)
+                let monthFilter = moment.max(m)
+
+                _.forEach(months, x => {
+                    let y = moment(x).format(`MMM YYYY`)
+                    $(`.chosen-select`).append(`<option value=${y.replace(/ +/g, "")}>${y}</option>`)
                 })
                 $(`.chosen-select`).append(`<option value=all>All</option>`)
+                $(`.chosen-select`).val(moment(monthFilter._i).format(`MMM YYYY`).replace(/ +/g, ""))
                 $(`.chosen-select`).trigger(`chosen:updated`)
 
                 $('.chosen-select').on('change', (evt, params) => {
-                    console.log(params.selected)
+                    if (params.selected === `all`) {
+                        byDN(results, `All`)
+                    } else {
+                        monthFilter = moment(moment(params.selected).format(`YYYY-MM-DD`))
+                        byDN(results, monthFilter._i)
+                    }
                 });
-
-                byDN(results)
+                byDN(results, monthFilter._i)
                 byMonth(results)
                 byMonth_Line(results)
             }

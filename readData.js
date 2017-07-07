@@ -22,7 +22,7 @@ module.exports = callback => {
             .on('add', path => {
                 // console.log(path)
                 readStreamAndPushJSONtoObject(path)
-                // console.log(`${fLocation}\\${file}`, allData)
+                // console.log(path)
             })
             .on('error', error => log(`Watcher error: ${error}`))
         // .on(`unlink`, path => {
@@ -59,6 +59,7 @@ module.exports = callback => {
     // Format the data
     function formatData(data) {
         data.Month = moment(data.ClosedDate).format(`MMMM YYYY`)
+        data.MonthFormat = moment(data.Month).format(`YYYY-MM-DD`)
         data.DN = `${data.PartNumber} : ${data.DNName}`
         delete data.PartID
         delete DNName

@@ -1,7 +1,19 @@
 // Transform the data to the proper format for Plotly
-function byDN(data) {
-    
-    // let colors = ["#a7a9ac", "#00AFD5", "#cddc38", "#246987", "blue"]
+function byDN(data, monthFilter) {
+    if (monthFilter === `All`) {
+        data = data
+    } else {
+        data = _.filter(data, x => {
+            return x.MonthFormat === monthFilter
+        })
+    }
+    let colors = {
+        Other: `#a7a9ac`,
+        Transient: `blue`,
+        Unjustified: `#cddc38`,
+        NoValue: `#246987`,
+        Justified: `#00AFD5`
+    }
     let months = _.map(data, x => {
         return moment(x.ClosedDate).format(`YYYY-MM-DD`)
     });
@@ -9,11 +21,11 @@ function byDN(data) {
     let month = _.map(months, x => {
         return moment(x, `YYYY-MM-DD`)
     });
-    // console.log(month)
     let maxMin = {
         min: moment.min(month),
         max: moment.max(month)
     }
+    // console.log(maxMin)
 
     let byJustification = _.groupBy(data, `ClosedReason`);
     let xJust = _.map(byJustification, (x, name) => {
@@ -35,6 +47,9 @@ function byDN(data) {
             y: _.map(mergedData, y => {
                 return y.x
             }),
+            marker: {
+                color: colors[name]
+            },
             name: name,
             type: `bar`,
             orientation: `h`

@@ -1,5 +1,12 @@
 // Transform the data to the proper format for Plotly
 function byMonth_Line(data) {
+    let colors = {
+        Other: `#a7a9ac`,
+        Transient: `blue`,
+        Unjustified: `#cddc38`,
+        NoValue: `#246987`,
+        Justified: `#00AFD5`
+    }
     let byJustification = _.groupBy(data, `ClosedReason`);
     let xMonth = _.map(byJustification, (x, name) => {
         let xAxis = _.map(_.uniq(_.map(x, y => {
@@ -21,6 +28,9 @@ function byMonth_Line(data) {
             y: _.map(mergedData, y => {
                 return y.y
             }),
+            marker: {
+                color: colors[name]
+            },
             name: name
             // type: `bar`
         }
