@@ -7,12 +7,16 @@ function byMonth(data) {
         NoValue: `#246987`,
         Justified: `#00AFD5`
     }
+
+    let ms = [];
+
     let byJustification = _.groupBy(data, `ClosedReason`);
     let xMonth = _.map(byJustification, (x, name) => {
         let xAxis = _.map(_.uniq(_.map(x, y => {
+            ms.push(y.Month)
             return y.Month
         })), z => {
-            return { x: z }
+            return { x : z }
         });
 
         let grpbyMonth = _.groupBy(x, `Month`)
@@ -20,7 +24,6 @@ function byMonth(data) {
             return { y: y.length }
         });
         let mergedData = _.merge(xAxis, yAxis);
-        // console.log(mergedData)
         let fullData = {
             x: _.map(mergedData, y => {
                 return y.x
@@ -36,8 +39,11 @@ function byMonth(data) {
         }
         return fullData
     });
-    // console.log(xMonth)
-
+    let msU = _.uniq(ms);
+    let sorted = msU.sort(function (a, b) {
+        return new Date(a) - new Date(b)
+    });
+    // console.log(sorted)
     // let gDN = _.groupBy(data, `DN`);
     // let order = _.map(gDN, (x, i) => {
     //     return {
@@ -53,14 +59,16 @@ function byMonth(data) {
         barmode: `stack`,
         title: `Alerts by Month`,
         xaxis: {
-            title: `Count`
+            title: `Count`,
+            categoryorder: `array`,
+            categoryarray: sorted
         },
         // yaxis: {
         //     categoryorder: `array`,
         //     categoryarray: sorted
         // },
         width: $(window).width() - 100,
-        height: ($(window).height() - ($(`#myTabs`).height() + 5))/2,
+        height: ($(window).height() - ($(`#myTabs`).height() + 5)) / 2,
         margin: {
             l: 310,
             // r: 200

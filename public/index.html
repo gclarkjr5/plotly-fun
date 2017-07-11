@@ -54,13 +54,17 @@
                 let m = _.map(results, x => {
                     return moment(x.MonthFormat)
                 })
+                
                 let months = _.uniq(_.map(m, x => {
                     return x._i
                 }));
-
+                let sorted = months.sort(function(a,b) {
+                    return new Date(a) - new Date(b)
+                })
+                // console.log(sorted)
                 let monthFilter = moment.max(m)
 
-                _.forEach(months, x => {
+                _.forEach(sorted, x => {
                     let y = moment(x).format(`MMM YYYY`)
                     $(`.chosen-select`).append(`<option value=${y.replace(/ +/g, "")}>${y}</option>`)
                 })
