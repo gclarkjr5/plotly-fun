@@ -43,17 +43,6 @@ function byMonth(data) {
     let sorted = msU.sort(function (a, b) {
         return new Date(a) - new Date(b)
     });
-    // console.log(sorted)
-    // let gDN = _.groupBy(data, `DN`);
-    // let order = _.map(gDN, (x, i) => {
-    //     return {
-    //         DN: i,
-    //         num: x.length
-    //     }
-    // })
-    // let sorted = _.map(_.orderBy(order, [`num`], [`asc`]), x => {
-    //     return x.DN
-    // })
 
     let layout = {
         barmode: `stack`,
@@ -63,18 +52,12 @@ function byMonth(data) {
             categoryorder: `array`,
             categoryarray: sorted
         },
-        // yaxis: {
-        //     categoryorder: `array`,
-        //     categoryarray: sorted
-        // },
         width: $(window).width() - 100,
         height: ($(window).height() - ($(`#myTabs`).height() + 5)) / 2,
         margin: {
-            l: 310,
-            // r: 200
+            l: 310
         }
     }
-    // console.log()
     // // Plot the data
     Plotly.newPlot('byMonth', xMonth, layout);
 }
