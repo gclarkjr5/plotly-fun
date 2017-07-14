@@ -62,25 +62,25 @@
                     return new Date(a) - new Date(b)
                 })
                 // console.log(sorted)
-                let monthFilter = moment.max(m)
+                let monthFilter = moment.max(m).format(`YYYY-MM-DD`)
 
                 _.forEach(sorted, x => {
-                    let y = moment(x).format(`MMM YYYY`)
+                    let y = moment(x, `YYYY-MM-DD`).format(`MMM YYYY`)
                     $(`.chosen-select`).append(`<option value=${y.replace(/ +/g, "")}>${y}</option>`)
                 })
                 $(`.chosen-select`).append(`<option value=all>All</option>`)
-                $(`.chosen-select`).val(moment(monthFilter._i).format(`MMM YYYY`).replace(/ +/g, ""))
+                $(`.chosen-select`).val(moment(monthFilter, `YYYY-MM-DD`).format(`MMM YYYY`).replace(/ +/g, ""))
                 $(`.chosen-select`).trigger(`chosen:updated`)
 
                 $('.chosen-select').on('change', (evt, params) => {
                     if (params.selected === `all`) {
                         byDN(results, `All`)
                     } else {
-                        monthFilter = moment(moment(params.selected).format(`YYYY-MM-DD`))
-                        byDN(results, monthFilter._i)
+                        monthFilter = moment(params.selected, `MMMYYYY`).format(`YYYY-MM-DD`)
+                        byDN(results, monthFilter)
                     }
                 });
-                byDN(results, monthFilter._i)
+                byDN(results, monthFilter)
                 byMonth(results)
                 byMonth_Line(results)
             }

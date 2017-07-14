@@ -25,20 +25,6 @@ module.exports = callback => {
                 // console.log(path)
             })
             .on('error', error => log(`Watcher error: ${error}`))
-        // .on(`unlink`, path => {
-        //     // console.log(path)
-        //     let file = []
-        //     fs.readdir(fLocation, (err, items) => {
-        //         for (var i = 0; i < items.length; i++) {
-        //             console.log(`${fLocation}\\${items[i]}`);
-        //             // file.push(`${fLocation}\\${items[i]}`);
-        //             readStreamAndPushJSONtoObject(`${fLocation}\\${items[i]}`)
-        //         }
-        //         // console.log(file)
-        //     });
-
-        //     // readStreamAndPushJSONtoObject(path)
-        // })
     }
 
     // Read in the csv files, transform it and return it
@@ -58,8 +44,9 @@ module.exports = callback => {
 
     // Format the data
     function formatData(data) {
-        data.Month = moment(data.ClosedDate).format(`MMMM YYYY`)
-        data.MonthFormat = moment(data.Month).format(`YYYY-MM-DD`)
+        // console.log(data)
+        data.Month = moment(data.ClosedDate, `YYYY-MM-DD HH:mm:ss.SSS`).format(`MMM YYYY`)
+        data.MonthFormat = moment(data.Month, `MMM YYYY`).format(`YYYY-MM-DD`)
         data.DN = `${data.PartNumber} : ${data.DNName}`
         delete data.PartID
         delete DNName
