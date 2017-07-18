@@ -5,7 +5,7 @@ const csv = require(`fast-csv`);
 const moment = require(`moment`);
 const chokidar = require(`chokidar`);
 
-// module.exports = callback => {
+module.exports = callback => {
     // The location of the csv files
     let folderLocation = `C:\\Users\\clarkg\\Documents\\plotlyData\\*csv`
 
@@ -35,7 +35,7 @@ const chokidar = require(`chokidar`);
             .on(`data`, data => {
                 let f = formatData(data);
                 // arr.push()
-                // callback(f)
+                 callback(f)
             })
             .on(`end`, () => {
                 // callback(arr);
@@ -52,4 +52,4 @@ const chokidar = require(`chokidar`);
         delete DNName
         return data
     }
-// }
+ }
