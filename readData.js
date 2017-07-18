@@ -5,9 +5,9 @@ const csv = require(`fast-csv`);
 const moment = require(`moment`);
 const chokidar = require(`chokidar`);
 
-module.exports = callback => {
+// module.exports = callback => {
     // The location of the csv files
-    let folderLocation = `C:\\Users\\clarkg\\Documents\\plotlyData\\`
+    let folderLocation = `C:\\Users\\clarkg\\Documents\\plotlyData\\*csv`
 
     watchFolderandReadFile(folderLocation);
 
@@ -22,7 +22,7 @@ module.exports = callback => {
             .on('add', path => {
                 // console.log(path)
                 readStreamAndPushJSONtoObject(path)
-                // console.log(path)
+                console.log(path)
             })
             .on('error', error => log(`Watcher error: ${error}`))
     }
@@ -35,7 +35,7 @@ module.exports = callback => {
             .on(`data`, data => {
                 let f = formatData(data);
                 // arr.push()
-                callback(f)
+                // callback(f)
             })
             .on(`end`, () => {
                 // callback(arr);
@@ -52,4 +52,4 @@ module.exports = callback => {
         delete DNName
         return data
     }
-}
+// }
